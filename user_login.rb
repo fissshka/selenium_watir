@@ -26,7 +26,6 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'login').click
   end
 
-
   def teardown
     @driver.quit
   end
