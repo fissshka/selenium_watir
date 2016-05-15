@@ -12,7 +12,7 @@ class FirstTest < Test::Unit::TestCase
 
     expected_text = 'Your account has been activated. You can now log in.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
-    sleep 2
+    @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
     assert_equal(expected_text, actual_text)
   end
 
@@ -22,7 +22,6 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:class, 'register').click
 
     @wait.until{@driver.find_element(:id, 'user_login').displayed?}
-    sleep 3
 
     @login = ('login' + rand(99999).to_s)
 
@@ -33,9 +32,10 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:id, 'user_lastname').send_keys 'user_lastname'
     @driver.find_element(:id, 'user_mail').send_keys(@login + '@mailinator.com')
 
-    sleep 3
-
     @driver.find_element(:name, 'commit').click
 
+  end
+  def teardown
+    @driver.quit
   end
   end
