@@ -1,30 +1,31 @@
 require 'test/unit'
 require 'selenium-webdriver'
-require './user_login.rb'
+
 
 class FirstTest < Test::Unit::TestCase
   def setup
     @driver = Selenium::WebDriver.for :firefox
-    @wait = Selenium::WebDriver::Wait.new(:timeout => 10)
+    @wait = Selenium::WebDriver::Wait.new(:timeout => 20)
 
   end
 
-  def test_change_pass
-    #login_user
+  def test_ChangePass
     pass_change
     expected_text = 'Password was successfully updated.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
-    sleep 2
+    @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
     assert_equal(expected_text, actual_text)
 
   end
 
   def pass_change
-    @wait.until{@driver.find_element(:class, 'logout').displayed?}
+    require './user_login_logout.rb'
+    @driver.navigate.to 'http://demo.redmine.org'
+    @wait.until{@driver.find_element(:class, 'my-account').displayed?}
     @driver.find_element(:class, 'my-account').click
 
     @wait.until{@driver.find_element(:class, 'icon icon-passwd').displayed?}
-    changePassButton = @driver.find_element(:class, 'icon icon-passwd').click
+    change_PassButton = @driver.find_element(:class, 'icon icon-passwd').click
 
     @wait.until{@driver.find_element(:id, 'password').displayed?}
 
