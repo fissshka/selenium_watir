@@ -19,9 +19,11 @@ class FirstTest < Test::Unit::TestCase
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
 
+    @init_pass = 'Qwertyu'
+    @new_pass = 'Qwertyui'
     @wait.until{@driver.find_element(:id, 'username').displayed?}
     @driver.find_element(:id, 'username').send_keys 'Zxcvbnm'
-    @driver.find_element(:id, 'password').send_keys 'Qwertyu'
+    @driver.find_element(:id, 'password').send_keys @init_pass
     @driver.find_element(:name, 'login').click
   end
 
