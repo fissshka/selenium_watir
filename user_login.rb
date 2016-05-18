@@ -10,7 +10,7 @@ class FirstTest < Test::Unit::TestCase
   def test_positive_login
     login_user
     @wait.until{@driver.find_element(:id, 'loggedas').displayed?}
-    expected = 'Logged in as '+'Zxcvbnm'
+    expected = 'Logged in as '+ @login
     actual = @driver.find_element(:id, 'loggedas').text
     assert_equal(expected, actual)
   end
@@ -19,12 +19,9 @@ class FirstTest < Test::Unit::TestCase
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
 
-    @logged_user = 'Zxcvbnm'
-    @init_pass = 'Qwertyu'
-    @new_pass = 'Qwertyui'
 
     @wait.until{@driver.find_element(:id, 'username').displayed?}
-    @driver.find_element(:id, 'username').send_keys @logged_user
+    @driver.find_element(:id, 'username').send_keys @login
     @driver.find_element(:id, 'password').send_keys @init_pass
     @driver.find_element(:name, 'login').click
   end
@@ -59,6 +56,8 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:id, 'password').displayed?}
 
+    @new_pass = 'Qwertyui'
+
     @driver.find_element(:id, 'password').send_keys @init_pass
     @driver.find_element(:id, 'new_password').send_keys @new_pass
     @driver.find_element(:id, 'new_password_confirmation').send_keys @new_pass
@@ -91,7 +90,7 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def project_creation
-    require './user_login.rb'
+    test_positive_login
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
 
@@ -100,8 +99,8 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
 
-    @project_title =  ('fir_Project' + rand(99999).to_s)
-    @project_identifier = ('grys' + rand(99999).to_s)
+    @project_title =  ('first_Project' + rand(99999).to_s)
+    @project_identifier = ('fpr' + rand(99999).to_s)
 
     @driver.find_element(:id, 'project_name').send_keys @project_title
     @driver.find_element(:id, 'project_description').send_keys 'Project has been created as a sample'
