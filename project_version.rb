@@ -75,6 +75,7 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
+    
 =begin
     @wait.until{@driver.find_element(:id, 'q').displayed?}
     @driver.find_element(:id, 'q').send_keys @project_title
