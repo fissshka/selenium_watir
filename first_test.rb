@@ -47,7 +47,10 @@ class FirstTest < Test::Unit::TestCase
   end
   def login_user
     test_positive_registration
-    @driver.navigate.to 'http://demo.redmine.org'
+
+    @wait.until{@driver.find_element(:class, 'logout').displayed?}
+    @driver.find_element(:class, 'logout').click
+
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
 
@@ -64,7 +67,7 @@ class FirstTest < Test::Unit::TestCase
     assert (expected_result.displayed?)
   end
   def logout_user
-    test_positive_login
+    test_positive_registration
     @wait.until{@driver.find_element(:class, 'logout').displayed?}
     @driver.find_element(:class, 'logout').click
   end
@@ -143,6 +146,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
 
   end
+
 
 
   def teardown

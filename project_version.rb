@@ -32,6 +32,7 @@ class FirstTest < Test::Unit::TestCase
 
   def test_ProjectCreation
     project_creation
+
     expected_text = 'Successful creation.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
@@ -48,8 +49,8 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
 
-    @project_title =  ('fir_Project' + rand(99999).to_s)
-    @project_identifier = ('grys' + rand(99999).to_s)
+    @project_title =  ('first_Project' + rand(99999).to_s)
+    @project_identifier = ('fpr' + rand(99999).to_s)
 
     @driver.find_element(:id, 'project_name').send_keys @project_title
     @driver.find_element(:id, 'project_description').send_keys 'Project has been created as a sample'
@@ -72,9 +73,13 @@ class FirstTest < Test::Unit::TestCase
   def subProject_creation
     test_ProjectCreation
 
-    @wait.until{@driver.find_element(:class, 'overview selected').displayed?}
-    @driver.find_element(:class, 'overview selected').click
-
+    @wait.until{@driver.find_element(:class, 'projects').displayed?}
+    @driver.find_element(:class, 'projects').click
+=begin
+    @wait.until{@driver.find_element(:id, 'q').displayed?}
+    @driver.find_element(:id, 'q').send_keys @project_title
+    @driver.find_element(:css, 'a.accesskey').click
+=end
     @wait.until{@driver.find_element(:class, 'icon-add').displayed?}
     @driver.find_element(:class, 'icon-add').click
 
