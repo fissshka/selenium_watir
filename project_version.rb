@@ -73,30 +73,23 @@ class FirstTest < Test::Unit::TestCase
   def subProject_creation
     test_ProjectCreation
 
-    @wait.until{@driver.find_element(:class, 'projects').displayed?}
-    @driver.find_element(:class, 'projects').click
-    
-=begin
-    @wait.until{@driver.find_element(:id, 'q').displayed?}
-    @driver.find_element(:id, 'q').send_keys @project_title
-    @driver.find_element(:css, 'a.accesskey').click
-=end
+    @wait.until{@driver.find_element(:class, 'overview').displayed?}
+    @driver.find_element(:class, 'overview').click
+
     @wait.until{@driver.find_element(:class, 'icon-add').displayed?}
     @driver.find_element(:class, 'icon-add').click
 
+    @sub_project_title =  ('sub_Project' + rand(99999).to_s)
+    @sub_project_identifier = ('sub' + rand(99999).to_s)
+
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
-
-    @project_title =  ('fir_Project' + rand(99999).to_s)
-    @project_identifier = ('grys' + rand(99999).to_s)
-
-    @driver.find_element(:id, 'project_name').send_keys @project_title
-    @driver.find_element(:id, 'project_description').send_keys 'Subproject has been created as a sample'
-    @driver.find_element(:id, 'project_identifier').send_keys @project_identifier
+    @driver.find_element(:id, 'project_name').send_keys @sub_project_title
+    @driver.find_element(:id, 'project_description').send_keys 'This subproject relates to project' + @project_title
+    @driver.find_element(:id, 'project_identifier').send_keys @sub_project_identifier
     @driver.find_element(:id, 'project_enabled_module_names_issue_tracking').click
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
-
   end
 
   def teardown
