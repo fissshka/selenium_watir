@@ -7,27 +7,60 @@ class FirstTest < Test::Unit::TestCase
     @wait = Selenium::WebDriver::Wait.new(:timeout => 10)
 
   end
+  def test_positive_registration
+    register_user
+
+    expected_text = 'Your account has been activated. You can now log in.'
+    actual_text = @driver.find_element(:id, 'flash_notice').text
+    @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
+    assert_equal(expected_text, actual_text)
+
+  end
+
+  def register_user
+    @driver.navigate.to 'http://demo.redmine.org'
+    @wait.until{@driver.find_element(:class, 'register').displayed?}
+    @driver.find_element(:class, 'register').click
+
+    @wait.until{@driver.find_element(:id, 'user_login').displayed?}
+
+    @login = ('login' + rand(99999).to_s)
+    @init_pass = 'Qwerty'
+
+    @driver.find_element(:id, 'user_login').send_keys @login
+    @driver.find_element(:id, 'user_password').send_keys @init_pass
+    @driver.find_element(:id, 'user_password_confirmation').send_keys @init_pass
+    @driver.find_element(:id, 'user_firstname').send_keys 'first_name'
+    @driver.find_element(:id, 'user_lastname').send_keys 'user_lastname'
+    @driver.find_element(:id, 'user_mail').send_keys(@login + '@mailinator.com')
+
+    @driver.find_element(:name, 'commit').click
+
+  end
+
   def test_positive_login
     login_user
     @wait.until{@driver.find_element(:id, 'loggedas').displayed?}
-    expected = 'Logged in as '+'Zxcvbnm'
+    expected = 'Logged in as '+ @login
     actual = @driver.find_element(:id, 'loggedas').text
     assert_equal(expected, actual)
   end
   def login_user
-    @driver.navigate.to 'http://demo.redmine.org'
+    test_positive_registration
+
+    @wait.until{@driver.find_element(:class, 'logout').displayed?}
+    @driver.find_element(:class, 'logout').click
+
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
 
-    @logged_user = 'Zxcvbnm'
-    @init_pass = 'Qwertyu'
-    @new_pass = 'Qwertyui'
 
     @wait.until{@driver.find_element(:id, 'username').displayed?}
-    @driver.find_element(:id, 'username').send_keys @logged_user
+    @driver.find_element(:id, 'username').send_keys @login
     @driver.find_element(:id, 'password').send_keys @init_pass
     @driver.find_element(:name, 'login').click
   end
+
 
   def test_ProjectCreation
     project_creation
@@ -62,13 +95,9 @@ class FirstTest < Test::Unit::TestCase
   def test_issue_bug
     bug_creation
 
-    @issue_title = @driver.find_element (:css, 'a.title')
-    @issue_title = @driver.find_element (:a, @issue_subject).text
-
-    expected_text = 'Issue' + title
-    actual_text = @driver.find_element(:id, 'flash_notice').text
-    @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
-    assert_equal(expected_text, actual_text)
+    expected = 'Bug'
+    actual = @driver.find_element(:class, 'tracker').text
+    assert_equal(expected, actual)
   end
 
   def bug_creation
@@ -82,14 +111,23 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:value, '1').click
 
     @issue_subject = 'Critical bug in the project'
+    @bug_description = 'This is bug'
 
     @driver.find_element(:id, 'issue_subject').send_keys @issue_subject
+    @driver.find_element(:id, 'issue_description').send_keys @bug_description
     @driver.find_element(:id, 'issue_priority_id').click
     @driver.find_element(:value, '7').text
     @driver.find_element(:value, '7').click
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
+
+    @wait.until{@driver.find_element(:class, 'issues selected').displayed?}
+    @wait.until{@driver.find_element(:class, 'issues selected').click}
+
+    @wait.until{@driver.find_element(:id, 'values_tracker_id_1').displayed?}
+    @driver.find_element(:id, 'values_tracker_id_1').click
+    @driver.find_element(:value, '1').click
 
   end
 
