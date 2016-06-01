@@ -95,13 +95,18 @@ class FirstTest < Test::Unit::TestCase
   def test_issue_bug
     bug_creation
 
-    expected = 'Bug'
-    actual = @driver.find_element(:class, 'tracker').text
+    expected = 'Issue ' + @project_title + ' created.'
+    actual = @driver.find_element(:class, 'flash notice').text
     assert_equal(expected, actual)
   end
 
   def bug_creation
     test_ProjectCreation
+    @wait.until{@driver.find_element(:class, 'projects').displayed?}
+    @driver.find_element(:class, 'projects').click
+    @driver.find_element(:name, 'q').send_keys @project_title
+    @driver.find_element(:name, 'q').click
+    @driver.find_element(:class, 'highlight token-0').click
     @wait.until{@driver.find_element(:class, 'new-issue').displayed?}
     @driver.find_element(:class, 'new-issue').click
 
