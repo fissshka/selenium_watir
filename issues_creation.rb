@@ -86,7 +86,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:id, 'project_name').send_keys @project_title
     @driver.find_element(:id, 'project_description').send_keys 'Project has been created as a sample'
     @driver.find_element(:id, 'project_identifier').send_keys @project_identifier
-    @driver.find_element(:id, 'project_enabled_module_names_issue_tracking').click
+
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
@@ -104,9 +104,11 @@ class FirstTest < Test::Unit::TestCase
     test_ProjectCreation
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
-    @driver.find_element(:name, 'q').send_keys @project_title
-    @driver.find_element(:name, 'q').click
-    @driver.find_element(:class, 'highlight token-0').click
+    @wait.until{@driver.find_element(:class, 'user active').displayed?}
+    @driver.find_element(:class, 'user active').click
+
+    @wait.until{@driver.find_element(:a, '/projects/@project_title').displayed?}
+    @driver.find_element(:a, '/projects/@project_title').click
     @wait.until{@driver.find_element(:class, 'new-issue').displayed?}
     @driver.find_element(:class, 'new-issue').click
 
