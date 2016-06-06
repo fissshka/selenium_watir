@@ -95,47 +95,34 @@ class FirstTest < Test::Unit::TestCase
   def test_issue_bug
     bug_creation
 
-    expected = 'Issue ' + @project_title + ' created.'
-    actual = @driver.find_element(:class, 'flash notice').text
+    @wait.until{@driver.find_element(:class, 'issue').displayed?}
+    expected = @issue_subject
+    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
     assert_equal(expected, actual)
+
   end
 
   def bug_creation
     test_ProjectCreation
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
-    @wait.until{@driver.find_element(:class, 'user active').displayed?}
-    @driver.find_element(:class, 'user active').click
 
-    @wait.until{@driver.find_element(:a, '/projects/@project_title').displayed?}
-    @driver.find_element(:a, '/projects/@project_title').click
-    @wait.until{@driver.find_element(:class, 'new-issue').displayed?}
-    @driver.find_element(:class, 'new-issue').click
-
+    @action_key = @driver.find_element(:id, 'quick-search').find_element(:id, 'q')
+    @action_key.send_keys @issue_subject
+    @action_key.submit
+    @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
     @wait.until{@driver.find_element(:id, 'issue_tracker_id').displayed?}
-    @driver.find_element(:id, 'issue_tracker_id').click
-    @driver.find_element(:value, '1').text
-    @driver.find_element(:value, '1').click
+    @issue_type = Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'issue_tracker_id'))
+    @issue_type.select_by(:value, '1')
 
     @issue_subject = 'Critical bug in the project'
     @bug_description = 'This is bug'
 
     @driver.find_element(:id, 'issue_subject').send_keys @issue_subject
     @driver.find_element(:id, 'issue_description').send_keys @bug_description
-    @driver.find_element(:id, 'issue_priority_id').click
-    @driver.find_element(:value, '7').text
-    @driver.find_element(:value, '7').click
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
-
-    @wait.until{@driver.find_element(:class, 'issues selected').displayed?}
-    @wait.until{@driver.find_element(:class, 'issues selected').click}
-
-    @wait.until{@driver.find_element(:id, 'values_tracker_id_1').displayed?}
-    @driver.find_element(:id, 'values_tracker_id_1').click
-    @driver.find_element(:value, '1').click
-
   end
 
   def teardown
