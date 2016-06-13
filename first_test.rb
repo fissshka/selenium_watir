@@ -175,6 +175,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
   end
 
+
   def teardown
     @driver.quit
   end

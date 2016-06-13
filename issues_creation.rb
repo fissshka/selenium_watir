@@ -92,6 +92,34 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
 
   end
+  def test_SubProjectCreation
+    subProject_creation
+    expected_text = 'Successful creation.'
+    actual_text = @driver.find_element(:id, 'flash_notice').text
+    @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
+    assert_equal(expected_text, actual_text)
+  end
+
+  def subProject_creation
+    test_ProjectCreation
+
+    @wait.until{@driver.find_element(:class, 'overview').displayed?}
+    @driver.find_element(:class, 'overview').click
+
+    @wait.until{@driver.find_element(:class, 'icon-add').displayed?}
+    @driver.find_element(:class, 'icon-add').click
+
+    @sub_project_title =  ('sub_Project' + rand(99999).to_s)
+    @sub_project_identifier = ('sub' + rand(99999).to_s)
+
+    @wait.until{@driver.find_element(:id, 'project_name').displayed?}
+    @driver.find_element(:id, 'project_name').send_keys @sub_project_title
+    @driver.find_element(:id, 'project_description').send_keys 'This subproject relates to project' + @project_title
+    @driver.find_element(:id, 'project_identifier').send_keys @sub_project_identifier
+
+    @wait.until{@driver.find_element(:name, 'commit').displayed?}
+    @driver.find_element(:name, 'commit').click
+  end
   def test_issue_bug
     bug_creation
 
@@ -103,7 +131,7 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def bug_creation
-    test_ProjectCreation
+    test_SubProjectCreation
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
 
