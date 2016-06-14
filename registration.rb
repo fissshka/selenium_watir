@@ -3,7 +3,9 @@ require 'test/unit'
 
   class FirstTest < Test::Unit::TestCase
     def setup
-      @driver = Selenium::WebDriver.for :firefox
+      @driver = Selenium::WebDriver::Chrome::Service.executable_path = File.join(Dir.pwd, '/chromedriver.exe')
+      @driver = Selenium::WebDriver.for :chrome
+      #@driver = Selenium::WebDriver.for :firefox
       @wait = Selenium::WebDriver::Wait.new(:timeout => 10)
 
     end
