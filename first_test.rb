@@ -74,7 +74,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:class, 'logout').click
   end
 
-  def test_ChangePass
+  def test_change_pass
     pass_change
     expected_text = 'Password was successfully updated.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
@@ -117,7 +117,7 @@ class FirstTest < Test::Unit::TestCase
 
   end
 
-  def test_ProjectCreation
+  def test_project_creation
     project_creation
 
     expected_text = 'Successful creation.'
@@ -148,16 +148,16 @@ class FirstTest < Test::Unit::TestCase
 
   end
 
-  def test_SubProjectCreation
-    subProject_creation
+  def test_subproject_creation
+    subproject_creation
     expected_text = 'Successful creation.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
     assert_equal(expected_text, actual_text)
   end
 
-  def subProject_creation
-    test_ProjectCreation
+  def subproject_creation
+    test_project_creation
 
     @wait.until{@driver.find_element(:class, 'overview').displayed?}
     @driver.find_element(:class, 'overview').click
@@ -166,17 +166,51 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:class, 'icon-add').click
 
     @sub_project_title =  ('sub_Project' + rand(99999).to_s)
-    @sub_project_identifier = ('sub' + rand(99999).to_s)
+    @sub_project_idsub_project_id = ('sub' + rand(99999).to_s)
 
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
     @driver.find_element(:id, 'project_name').send_keys @sub_project_title
     @driver.find_element(:id, 'project_description').send_keys 'This subproject relates to project' + @project_title
-    @driver.find_element(:id, 'project_identifier').send_keys @sub_project_identifier
+    @driver.find_element(:id, 'project_identifier').send_keys @sub_project_id
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
   end
+  def test_issue_bug
+    bug_creation
 
+    @wait.until{@driver.find_element(:class, 'issue').displayed?}
+    expected = @issue_subject
+    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
+    assert_equal(expected, actual)
+
+  end
+
+  def bug_creation
+    test_subproject_creation
+    @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
+    @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
+    @action_key = @driver.find_element(:name, 'q')
+    @action_key.send_keys @sub_project_title
+    @action_key.submit
+    @wait.until{@driver.find_element(:class, 'project').displayed?}
+    @driver.find_element(:class, 'token-0').click
+
+    @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
+    @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
+    @wait.until{@driver.find_element(:id, 'issue_tracker_id').displayed?}
+    @issue_type = Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'issue_tracker_id'))
+    @issue_type.select_by(:value, '1')
+
+    @issue_subject = 'Critical bug in the project'
+    @bug_description = 'This is bug'
+
+    @driver.find_element(:id, 'issue_subject').send_keys @issue_subject
+    @driver.find_element(:id, 'issue_description').send_keys @bug_description
+
+    @wait.until{@driver.find_element(:name, 'commit').displayed?}
+    @driver.find_element(:name, 'commit').click
+  end
 
   def teardown
     @driver.quit
