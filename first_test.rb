@@ -219,10 +219,8 @@ class FirstTest < Test::Unit::TestCase
     @feature_description = 'This is awesome feature'
 
     @driver.find_element(:id, 'issue_subject').send_keys @feature_subject
-    #sleep 3
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
     @driver.find_element(:id, 'issue_description').send_keys @feature_description
-    #sleep 3
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
