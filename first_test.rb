@@ -11,7 +11,6 @@ class FirstTest < Test::Unit::TestCase
   end
   def test_positive_registration
     register_user
-
     expected_text = 'Your account has been activated. You can now log in.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
@@ -55,7 +54,6 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
-
 
     @wait.until{@driver.find_element(:id, 'username').displayed?}
     @driver.find_element(:id, 'username').send_keys @login
@@ -180,7 +178,7 @@ class FirstTest < Test::Unit::TestCase
     bug_creation
 
     @wait.until{@driver.find_element(:class, 'issue').displayed?}
-    expected = @issue_subject
+    expected = @bug_subject
     actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
     assert_equal(expected, actual)
 
@@ -202,11 +200,90 @@ class FirstTest < Test::Unit::TestCase
     @issue_type = Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'issue_tracker_id'))
     @issue_type.select_by(:value, '1')
 
-    @issue_subject = 'Critical bug in the project'
+    @bug_subject = 'Critical bug in the project'
     @bug_description = 'This is bug'
 
-    @driver.find_element(:id, 'issue_subject').send_keys @issue_subject
+    @driver.find_element(:id, 'issue_subject').send_keys @bug_subject
     @driver.find_element(:id, 'issue_description').send_keys @bug_description
+
+    @wait.until{@driver.find_element(:name, 'commit').displayed?}
+    @driver.find_element(:name, 'commit').click
+  end
+
+  def test_issue_feature
+    feature_creation
+
+    @wait.until{@driver.find_element(:class, 'issue').displayed?}
+    expected = @feature_subject
+    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
+    assert_equal(expected, actual)
+
+  end
+
+  def feature_creation
+    test_subproject_creation
+    @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
+    @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
+    @action_key = @driver.find_element(:name, 'q')
+    @action_key.send_keys @sub_project_title
+    @action_key.submit
+    @wait.until{@driver.find_element(:class, 'project').displayed?}
+    @driver.find_element(:class, 'token-0').click
+
+    @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
+    @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
+    @wait.until{@driver.find_element(:id, 'issue_tracker_id').displayed?}
+    @issue_type = Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'issue_tracker_id'))
+    @issue_type.select_by(:value, '2')
+
+    @feature_subject = 'New feature'
+    @feature_description = 'This is awesome feature'
+
+    @driver.find_element(:id, 'issue_subject').send_keys @feature_subject
+    #sleep 3
+    #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
+    @driver.find_element(:id, 'issue_description').send_keys @feature_description
+    #sleep 3
+    #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
+
+    @wait.until{@driver.find_element(:name, 'commit').displayed?}
+    @driver.find_element(:name, 'commit').click
+  end
+
+  def test_issue_support
+    support_creation
+
+    @wait.until{@driver.find_element(:class, 'issue').displayed?}
+    expected = @support_subject
+    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
+    assert_equal(expected, actual)
+
+  end
+
+  def support_creation
+    test_subproject_creation
+    @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
+    @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
+    @action_key = @driver.find_element(:name, 'q')
+    @action_key.send_keys @sub_project_title
+    @action_key.submit
+    @wait.until{@driver.find_element(:class, 'project').displayed?}
+    @driver.find_element(:class, 'token-0').click
+
+    @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
+    @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
+    @wait.until{@driver.find_element(:id, 'issue_tracker_id').displayed?}
+    @issue_type = Selenium::WebDriver::Support::Select.new(@driver.find_element(:id, 'issue_tracker_id'))
+    @issue_type.select_by(:value, '3')
+
+    @support_subject = 'New support'
+    @support_description = 'This is support issue'
+
+    @driver.find_element(:id, 'issue_subject').send_keys @support_subject
+    #@wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+    @driver.find_element(:id, 'issue_description').send_keys @support_description
+    #@wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
