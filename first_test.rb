@@ -7,7 +7,6 @@ class FirstTest < Test::Unit::TestCase
     @driver = Selenium::WebDriver.for :chrome
     #@driver = Selenium::WebDriver.for :firefox
     @wait = Selenium::WebDriver::Wait.new(:timeout => 10)
-
   end
   def test_positive_registration
     register_user
@@ -15,14 +14,11 @@ class FirstTest < Test::Unit::TestCase
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
     assert_equal(expected_text, actual_text)
-
   end
-
   def register_user
     @driver.navigate.to 'http://demo.redmine.org'
     @wait.until{@driver.find_element(:class, 'register').displayed?}
     @driver.find_element(:class, 'register').click
-
     @wait.until{@driver.find_element(:id, 'user_login').displayed?}
 
     @login = ('login' + rand(99999).to_s)
@@ -36,7 +32,6 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:id, 'user_mail').send_keys(@login + '@mailinator.com')
 
     @driver.find_element(:name, 'commit').click
-
   end
 
   def test_positive_login
@@ -48,13 +43,10 @@ class FirstTest < Test::Unit::TestCase
   end
   def login_user
     test_positive_registration
-
     @wait.until{@driver.find_element(:class, 'logout').displayed?}
     @driver.find_element(:class, 'logout').click
-
     @wait.until{@driver.find_element(:class, 'login').displayed?}
     @driver.find_element(:class, 'login').click
-
     @wait.until{@driver.find_element(:id, 'username').displayed?}
     @driver.find_element(:id, 'username').send_keys @login
     @driver.find_element(:id, 'password').send_keys @init_pass
@@ -78,17 +70,14 @@ class FirstTest < Test::Unit::TestCase
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
     assert_equal(expected_text, actual_text)
-
   end
 
   def pass_change
     test_positive_login
     @wait.until{@driver.find_element(:class, 'my-account').displayed?}
     @driver.find_element(:class, 'my-account').click
-
     @wait.until{@driver.find_element(:class, 'icon-passwd').displayed?}
     @driver.find_element(:class, 'icon-passwd').click
-
     @wait.until{@driver.find_element(:id, 'password').displayed?}
 
     @new_pass = 'Qwertyui'
@@ -112,12 +101,10 @@ class FirstTest < Test::Unit::TestCase
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
-
   end
 
   def test_project_creation
     project_creation
-
     expected_text = 'Successful creation.'
     actual_text = @driver.find_element(:id, 'flash_notice').text
     @wait.until{@driver.find_element(:id, 'flash_notice').displayed?}
@@ -128,22 +115,19 @@ class FirstTest < Test::Unit::TestCase
     test_positive_login
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
-
     @wait.until{@driver.find_element(:class, 'icon-add').displayed?}
     @driver.find_element(:class, 'icon-add').click
-
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
 
     @project_title =  ('first_Project' + rand(99999).to_s)
-    @project_identifier = ('fpr' + rand(99999).to_s)
+    @project_id = ('fpr' + rand(99999).to_s)
 
     @driver.find_element(:id, 'project_name').send_keys @project_title
     @driver.find_element(:id, 'project_description').send_keys 'Project has been created as a sample'
-    @driver.find_element(:id, 'project_identifier').send_keys @project_identifier
+    @driver.find_element(:id, 'project_identifier').send_keys @project_id
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
-
   end
 
   def test_subproject_creation
@@ -164,7 +148,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:class, 'icon-add').click
 
     @sub_project_title =  ('sub_Project' + rand(99999).to_s)
-    @sub_project_idsub_project_id = ('sub' + rand(99999).to_s)
+    @sub_project_id = ('sub' + rand(99999).to_s)
 
     @wait.until{@driver.find_element(:id, 'project_name').displayed?}
     @driver.find_element(:id, 'project_name').send_keys @sub_project_title
@@ -174,17 +158,7 @@ class FirstTest < Test::Unit::TestCase
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
     @driver.find_element(:name, 'commit').click
   end
-  def test_issue_bug
-    bug_creation
-
-    @wait.until{@driver.find_element(:class, 'issue').displayed?}
-    expected = @bug_subject
-    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
-    assert_equal(expected, actual)
-
-  end
-
-  def bug_creation
+  def subproj_open
     test_subproject_creation
     @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
     @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
@@ -193,6 +167,18 @@ class FirstTest < Test::Unit::TestCase
     @action_key.submit
     @wait.until{@driver.find_element(:class, 'project').displayed?}
     @driver.find_element(:class, 'token-0').click
+  end
+  def test_issue_bug
+    bug_creation
+
+    @wait.until{@driver.find_element(:class, 'issue').displayed?}
+    expected = @bug_subject
+    actual = @driver.find_element(:class, 'issue').find_element(:class, 'subject').text
+    assert_equal(expected, actual)
+  end
+
+  def bug_creation
+    subproj_open
 
     @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
     @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
@@ -221,14 +207,7 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def feature_creation
-    test_subproject_creation
-    @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
-    @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
-    @action_key = @driver.find_element(:name, 'q')
-    @action_key.send_keys @sub_project_title
-    @action_key.submit
-    @wait.until{@driver.find_element(:class, 'project').displayed?}
-    @driver.find_element(:class, 'token-0').click
+    subproj_open
 
     @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
     @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
@@ -261,14 +240,7 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def support_creation
-    test_subproject_creation
-    @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
-    @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
-    @action_key = @driver.find_element(:name, 'q')
-    @action_key.send_keys @sub_project_title
-    @action_key.submit
-    @wait.until{@driver.find_element(:class, 'project').displayed?}
-    @driver.find_element(:class, 'token-0').click
+    subproj_open
 
     @wait.until{@driver.find_element(:id, 'main-menu').displayed?}
     @driver.find_element(:id, 'main-menu').find_element(:class, 'new-issue').click
@@ -281,6 +253,7 @@ class FirstTest < Test::Unit::TestCase
 
     @driver.find_element(:id, 'issue_subject').send_keys @support_subject
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+    @wait.until{@driver.find_element(:id, 'issue_description').displayed?}
     @driver.find_element(:id, 'issue_description').send_keys @support_description
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 30)
 
