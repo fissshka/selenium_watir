@@ -42,7 +42,6 @@ class FirstTest < Test::Unit::TestCase
     assert_equal(expected, actual)
   end
   def login_user
-    #test_positive_registration
     register_user
     @wait.until{@driver.find_element(:class, 'logout').displayed?}
     @driver.find_element(:class, 'logout').click
@@ -75,7 +74,6 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def pass_change
-    #test_positive_login
     login_user
     @wait.until{@driver.find_element(:class, 'my-account').displayed?}
     @driver.find_element(:class, 'my-account').click
@@ -115,7 +113,6 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def project_creation
-    #test_positive_login
     login_user
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
@@ -143,7 +140,6 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def subproject_creation
-    #test_project_creation
     project_creation
     @wait.until{@driver.find_element(:class, 'overview').displayed?}
     @driver.find_element(:class, 'overview').click
@@ -163,7 +159,6 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
   end
   def subproj_open
-    #test_subproject_creation
     subproject_creation
     @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
     @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
