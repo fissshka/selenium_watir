@@ -163,7 +163,7 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
   end
   def subproj_open
-    # test_subproject_creation
+    #test_subproject_creation
     subproject_creation
     @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
     @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
