@@ -42,7 +42,8 @@ class FirstTest < Test::Unit::TestCase
     assert_equal(expected, actual)
   end
   def login_user
-    test_positive_registration
+    #test_positive_registration
+    register_user
     @wait.until{@driver.find_element(:class, 'logout').displayed?}
     @driver.find_element(:class, 'logout').click
     @wait.until{@driver.find_element(:class, 'login').displayed?}
@@ -59,7 +60,8 @@ class FirstTest < Test::Unit::TestCase
     assert (expected_result.displayed?)
   end
   def logout_user
-    test_positive_registration
+    #test_positive_registration
+    register_user
     @wait.until{@driver.find_element(:class, 'logout').displayed?}
     @driver.find_element(:class, 'logout').click
   end
@@ -73,7 +75,8 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def pass_change
-    test_positive_login
+    #test_positive_login
+    login_user
     @wait.until{@driver.find_element(:class, 'my-account').displayed?}
     @driver.find_element(:class, 'my-account').click
     @wait.until{@driver.find_element(:class, 'icon-passwd').displayed?}
@@ -112,7 +115,8 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def project_creation
-    test_positive_login
+    #test_positive_login
+    login_user
     @wait.until{@driver.find_element(:class, 'projects').displayed?}
     @driver.find_element(:class, 'projects').click
     @wait.until{@driver.find_element(:class, 'icon-add').displayed?}
@@ -139,8 +143,8 @@ class FirstTest < Test::Unit::TestCase
   end
 
   def subproject_creation
-    test_project_creation
-
+    #test_project_creation
+    project_creation
     @wait.until{@driver.find_element(:class, 'overview').displayed?}
     @driver.find_element(:class, 'overview').click
 
@@ -159,7 +163,8 @@ class FirstTest < Test::Unit::TestCase
     @driver.find_element(:name, 'commit').click
   end
   def subproj_open
-    test_subproject_creation
+    #test_subproject_creation
+    subproject_creation
     @driver.find_element(:id, 'loggedas').find_element(:class, 'active').click
     @wait.until{@driver.find_element(:id, 'quick-search').displayed?}
     @action_key = @driver.find_element(:name, 'q')
@@ -219,10 +224,8 @@ class FirstTest < Test::Unit::TestCase
     @feature_description = 'This is awesome feature'
 
     @driver.find_element(:id, 'issue_subject').send_keys @feature_subject
-    #sleep 3
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
     @driver.find_element(:id, 'issue_description').send_keys @feature_description
-    #sleep 3
     #@wait = Selenium::WebDriver::Wait.new(:timeout => 2)
 
     @wait.until{@driver.find_element(:name, 'commit').displayed?}
