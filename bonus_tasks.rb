@@ -20,9 +20,9 @@ class FirstTest < Test::Unit::TestCase
   end
   def test_drag
     drag_drop
-    expected = @driver.find_element(:tag_name, 'header')
-    @position = [String]
-    assert_equal(expected, 'A')
+    expected = @driver.find_element(:class, 'column').find_element(:tag_name, 'header')
+    @drag = 'A'
+    assert_equal(expected, @drag)
   end
   def drag_drop
     @driver.navigate.to 'https://the-internet.herokuapp.com/drag_and_drop'
